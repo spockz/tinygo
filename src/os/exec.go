@@ -72,3 +72,6 @@ func (p *Process) Kill() error {
 func (p *Process) Signal(sig Signal) error {
 	return ErrNotImplemented
 }
+func FindProcess(pid int) (*Process, error) {
+	panic("Not implemented")
+}

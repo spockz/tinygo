@@ -208,7 +208,45 @@ const (
 	S_IXGRP  = 0x8
 	S_IXOTH  = 0x1
 	S_IXUSR  = 0x40
+
+	IGNBRK     = 0x1
+	BRKINT     = 0x2
+	PARMRK     = 0x8
+	ISTRIP     = 0x20
+	INLCR      = 0x40
+	IGNCR      = 0x80
+	ICRNL      = 0x100
+	IXON       = 0x200 // different on diff platforms
+	ECHO       = 0x8
+	ECHONL     = 0x40
+	ICANON     = 0x100 // different on diff platforms
+	ISIG       = 0x80
+	IEXTEN     = 0x400 //diff
+	CSIZE      = 0x300
+	PARENB     = 0x1000
+	CS8        = 0x300
+	VMIN       = 0x10 //diff
+	VTIME      = 0x11
+	SYS_IOCTL  = 0x54
+	TIOCGETA   = 0x40487413 // diff
+	TIOCSETA   = 0x80487414
+	TIOCSETAF  = 0x80487416
+	TIOCSETAW  = 0x80487415
+	TIOCGWINSZ = 0x40087468
+	SIGTSTP    = Signal(0x12)
+	SIGWINCH   = Signal(0x1c)
 )
+
+type Termios struct {
+	Iflag     uint64
+	Oflag     uint64
+	Cflag     uint64
+	Lflag     uint64
+	Cc        [20]uint8
+	Pad_cgo_0 [4]byte
+	Ispeed    uint64
+	Ospeed    uint64
+}
 
 func Stat(path string, p *Stat_t) (err error) {
 	data := cstring(path)
@@ -259,6 +297,8 @@ func Pipe2(fds []int, flags int) (err error) {
 	}
 	return
 }
+
+func Syscall6(trap, a1, a2, a3, a4, a5, a6 uintptr) (r1, r2 uintptr, err Errno)
 
 func readdir_r(dir uintptr, entry *Dirent, result **Dirent) (err error) {
 	e1 := libc_readdir_r(unsafe.Pointer(dir), unsafe.Pointer(entry), unsafe.Pointer(result))
